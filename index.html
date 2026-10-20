@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Idris Event Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Creepster&display=swap">
+<style>
+/* Layout: one dark ops-briefing page. Part 1 = Idris mission timeline (steel + RSI teal).
+   Part 2 = Day of the Vara (pumpkin over violet). Everything stacks to one column under 720px. */
+:root{
+  --bg:#07090f; --bg-2:#0d1119; --panel:#121826; --panel-2:#182033; --line:#243049;
+  --fg:#e6ecf5; --fg-2:#a7b3c7; --fg-3:#6f7d96;
+  --teal:#3ec9d6; --teal-2:#1a8f9c; --teal-dim:rgba(62,201,214,.14);
+  --amber:#f2b63c; --amber-dim:rgba(242,182,60,.14);
+  --green:#5ad18a; --green-dim:rgba(90,209,138,.14);
+  --orange:#ff9a3c; --orange-dim:rgba(255,154,60,.16);
+  --pumpkin:#ff7a1a; --pumpkin-2:#ffb15c; --violet:#2a1540; --violet-2:#160a26; --violet-line:#4a2a6e; --ghost:#f3ecff;
+  --display:"Chakra Petch",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --spook:"Creepster","Chakra Petch",cursive;
+  --r:10px; --gutter-l:max(16px,env(safe-area-inset-left,0px)); --gutter-r:max(16px,env(safe-area-inset-right,0px));
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.55 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background-image:radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,.35) 50%,transparent 51%),radial-gradient(1px 1px at 68% 8%,rgba(255,255,255,.3) 50%,transparent 51%),radial-gradient(1.5px 1.5px at 84% 32%,rgba(255,255,255,.25) 50%,transparent 51%),radial-gradient(1px 1px at 40% 60%,rgba(255,255,255,.22) 50%,transparent 51%),radial-gradient(1px 1px at 22% 82%,rgba(255,255,255,.28) 50%,transparent 51%),radial-gradient(1.5px 1.5px at 92% 76%,rgba(255,255,255,.2) 50%,transparent 51%);
+  background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--teal)}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.15;margin:0;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding-left:var(--gutter-l);padding-right:var(--gutter-r)}
+.eyebrow{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgba(7,9,15,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:14px;min-height:52px;padding-block:8px;flex-wrap:wrap}
+.brand{font:700 15px var(--display);letter-spacing:.04em;color:var(--fg);text-decoration:none;display:flex;align-items:center;gap:8px}
+.brand i{width:10px;height:10px;border-radius:2px;background:var(--teal);box-shadow:0 0 12px var(--teal);display:inline-block}
+.nav nav{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.nav nav a{font:600 12px var(--display);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--fg-2);padding:7px 11px;border-radius:999px;border:1px solid var(--line)}
+.nav nav a.vara-link{color:var(--pumpkin-2);border-color:rgba(255,122,26,.4)}
+.nav nav a:hover,.nav nav a:focus-visible{color:var(--fg);border-color:var(--teal);outline:none}
+
+/* hero */
+.hero{padding-block:36px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(62,201,214,.06),transparent 70%)}
+.hero h1{font-size:clamp(30px,5.5vw,52px);font-weight:700;letter-spacing:-.01em}
+.hero h1 span{color:var(--teal)}
+.hero .lede{color:var(--fg-2);max-width:62ch;margin-top:10px;font-size:17px}
+.clock{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:22px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.tile b{font:600 20px/1.2 var(--display)}
+.tile small{color:var(--fg-2);font-size:13px}
+.tile.warn{border-color:rgba(242,182,60,.5);background:linear-gradient(180deg,var(--amber-dim),var(--panel))}
+.tile.warn b{color:var(--amber)}
+.tile.vara{border-color:rgba(255,122,26,.5);background:linear-gradient(180deg,rgba(255,122,26,.12),var(--panel))}
+.tile.vara b{color:var(--pumpkin-2)}
+.tile.ok{border-color:rgba(90,209,138,.45);background:linear-gradient(180deg,var(--green-dim),var(--panel))}
+.tile.ok b{color:var(--green)}
+
+/* sections */
+section.band{padding-block:40px 48px}
+.sec-head{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.sec-head h2{font-size:clamp(24px,4vw,36px);font-weight:700}
+.sec-head p{color:var(--fg-2);max-width:68ch}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;min-width:0;display:flex;flex-direction:column;gap:12px}
+.card h3{font-size:18px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card h4{font-size:14px;font-weight:600;color:var(--fg-2);letter-spacing:.02em}
+.card ul,.card ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;color:var(--fg-2)}
+.card li b{color:var(--fg);font-weight:600}
+.pill{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:999px;border:1px solid;white-space:nowrap}
+.pill.teal{color:var(--teal);border-color:rgba(62,201,214,.5);background:var(--teal-dim)}
+.pill.amber{color:var(--amber);border-color:rgba(242,182,60,.5);background:var(--amber-dim)}
+.pill.green{color:var(--green);border-color:rgba(90,209,138,.5);background:var(--green-dim)}
+.pill.orange{color:var(--orange);border-color:rgba(255,154,60,.55);background:var(--orange-dim)}
+.pill.grey{color:var(--fg-2);border-color:var(--line);background:var(--bg-2)}
+.callout{border-left:3px solid var(--amber);background:var(--amber-dim);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;color:var(--fg);display:flex;flex-direction:column;gap:4px}
+.callout.teal{border-color:var(--teal);background:var(--teal-dim)}
+.callout.green{border-color:var(--green);background:var(--green-dim)}
+.callout .eyebrow{color:inherit;opacity:.8}
+.math{background:var(--bg-2);border:1px dashed var(--line);border-radius:8px;padding:10px 12px;font-size:13.5px;color:var(--fg-2)}
+.math b{color:var(--fg)}
+.note{font-size:13px;color:var(--fg-3)}
+
+/* pickup steps */
+.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
+.steps li{counter-increment:s;background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:12px 12px 12px 14px;position:relative;min-width:0;color:var(--fg-2);font-size:14px}
+.steps li::before{content:counter(s);display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--teal);color:#04161a;font:700 12px var(--mono);margin-right:8px;vertical-align:middle}
+.steps li b{color:var(--fg)}
+
+/* TIMELINE */
+.tl-wrap{position:relative;display:flex;flex-direction:column;gap:14px;padding-left:34px}
+.tl-wrap::before{content:"";position:absolute;left:11px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--teal),var(--line))}
+.ms{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.ms::before{content:attr(data-n);position:absolute;left:-34px;top:16px;width:24px;height:24px;border-radius:50%;background:var(--bg);border:2px solid var(--teal);color:var(--teal);font:700 10px/20px var(--mono);text-align:center}
+.ms.orange::before{border-color:var(--orange);color:var(--orange)}
+.ms.tier{border-color:rgba(90,209,138,.55);box-shadow:0 0 0 1px rgba(90,209,138,.15) inset}
+.ms.tier::before{background:var(--green);border-color:var(--green);color:#04120a}
+.ms.block{border-style:dashed}
+.ms-head{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.ms-head .title{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:4px}
+.ms-head h3{font-size:18px;font-weight:600}
+.ms-head .giver{font-size:13px;color:var(--fg-3)}
+.ms-head .giver b{color:var(--fg-2);font-weight:500}
+.pts{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:none}
+.pts b{font:700 24px/1 var(--mono);color:var(--teal)}
+.pts small{font:600 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3)}
+.ms.orange .pts b{color:var(--orange)}
+.ms-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px 18px;font-size:14px;color:var(--fg-2)}
+.ms-body div{min-width:0}
+.ms-body .k{font:600 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3);display:block;margin-bottom:3px}
+.ms-body b{color:var(--fg);font-weight:600}
+.unlock{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--green)}
+.unlock .pill{font-size:10px}
+/* progress */
+.prog{display:flex;flex-direction:column;gap:8px;background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.bar{display:grid;grid-template-columns:92px 1fr 76px;gap:10px;align-items:center}
+.bar .lbl{font:600 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3)}
+.bar .val{font:600 12px var(--mono);color:var(--fg-2);text-align:right;font-variant-numeric:tabular-nums}
+.track{position:relative;height:10px;border-radius:999px;background:#1b2436;overflow:visible}
+.fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,var(--teal-2),var(--teal))}
+.bar.total .fill{background:linear-gradient(90deg,#8a5a12,var(--amber))}
+.tick{position:absolute;top:-3px;width:2px;height:16px;background:var(--fg-3);opacity:.7}
+.tick.hit{background:var(--green);opacity:1;box-shadow:0 0 8px var(--green)}
+.tick span{position:absolute;top:17px;left:50%;transform:translateX(-50%);font:600 9px var(--mono);color:var(--fg-3);white-space:nowrap}
+.tick.hit span{color:var(--green)}
+.bar .track{margin-bottom:12px}
+@media (max-width:520px){.bar{grid-template-columns:70px 1fr 64px}.bar .lbl{font-size:9px}}
+
+/* optional lanes */
+.opt{opacity:.92}
+.opt .card{background:var(--bg-2)}
+
+/* checklist */
+.check{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.check li{display:flex;gap:12px;align-items:flex-start;background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.check input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--teal);flex:none}
+.check label{color:var(--fg);cursor:pointer;min-width:0}
+.check label small{display:block;color:var(--fg-3);font-size:13px;margin-top:2px}
+.check li:has(input:checked) label{color:var(--fg-3);text-decoration:line-through}
+.check-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{font:600 12px var(--display);letter-spacing:.08em;text-transform:uppercase;background:transparent;color:var(--fg-2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer}
+.btn:hover,.btn:focus-visible{border-color:var(--teal);color:var(--fg);outline:none}
+
+/* tiers */
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+.tier-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;min-width:0}
+.tier-card h4{font:700 14px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.tier-card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13.5px}
+.tier-card dt{font:600 13px var(--mono);color:var(--fg-3);white-space:nowrap}
+.tier-card dd{margin:0;color:var(--fg-2)}
+
+/* VARA BAND */
+.vara-band{position:relative;background:linear-gradient(180deg,var(--violet-2) 0%,var(--violet) 35%,#0c0614 100%);border-top:1px solid var(--violet-line);color:var(--ghost);overflow:hidden}
+.vara-band::before{content:"";position:absolute;inset:auto -10% -40% -10%;height:70%;background:radial-gradient(ellipse at 50% 100%,rgba(255,122,26,.35),transparent 60%);pointer-events:none}
+.vara-band .wrap{position:relative}
+.moon{position:absolute;right:4%;top:28px;width:min(120px,22vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff4d6,#ffb15c 60%,#d9772a);box-shadow:0 0 60px rgba(255,177,92,.45),0 0 140px rgba(255,122,26,.25);opacity:.9}
+.bats{position:absolute;left:0;right:0;top:0;height:220px;pointer-events:none;opacity:.55}
+.bats svg{position:absolute;fill:#0a0410;width:34px}
+.vara-head{padding-top:44px;display:flex;flex-direction:column;gap:10px;max-width:70ch}
+.vara-head .eyebrow{color:var(--pumpkin-2)}
+.vara-head h2{font:400 clamp(44px,9vw,84px)/1 var(--spook);color:var(--pumpkin);text-shadow:0 0 24px rgba(255,122,26,.5),2px 3px 0 #3a1200;letter-spacing:.02em}
+.vara-head p{color:#d8cbe8;font-size:17px}
+.vara-band .card{background:rgba(20,10,34,.85);border-color:var(--violet-line);color:var(--ghost)}
+.vara-band .card h3{color:var(--pumpkin-2)}
+.vara-band .card ul,.vara-band .card ol{color:#cdbfe0}
+.vara-band .card li b{color:var(--ghost)}
+.vara-band .pill.orange{color:var(--pumpkin-2);border-color:rgba(255,122,26,.55);background:rgba(255,122,26,.14)}
+.vara-band .pill.ghost{color:#cdbfe0;border-color:var(--violet-line);background:rgba(243,236,255,.06)}
+.vara-band .callout{border-color:var(--pumpkin);background:rgba(255,122,26,.12);color:var(--ghost)}
+.vara-band .math{background:rgba(0,0,0,.3);border-color:var(--violet-line);color:#cdbfe0}
+.vara-band .math b{color:var(--ghost)}
+.vara-band .check li{background:rgba(0,0,0,.28);border-color:var(--violet-line)}
+.vara-band .check input{accent-color:var(--pumpkin)}
+.vara-band .check label{color:var(--ghost)}
+.vara-band .check label small{color:#9d8bb8}
+.vara-band .check li:has(input:checked) label{color:#8c7aa8}
+.vara-band .btn{border-color:var(--violet-line);color:#cdbfe0}
+.vara-band .btn:hover,.vara-band .btn:focus-visible{border-color:var(--pumpkin);color:var(--ghost)}
+.vara-band .eyebrow{color:#9d8bb8}
+.dates{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px}
+.dt-card{background:rgba(20,10,34,.85);border:1px solid var(--violet-line);border-radius:var(--r);padding:14px;min-width:0;position:relative}
+.dt-card::before{content:"";position:absolute;left:14px;top:-7px;width:12px;height:12px;border-radius:50%;background:var(--pumpkin);box-shadow:0 0 14px var(--pumpkin)}
+.dt-card.tbd::before{background:transparent;border:2px dashed var(--pumpkin-2);box-shadow:none}
+.dt-card .eyebrow{color:var(--pumpkin-2)}
+.dt-card b{display:block;font:600 19px/1.2 var(--display);margin:6px 0 4px}
+.dt-card span{color:#cdbfe0;font-size:14px}
+.ghost-wrap{display:flex;gap:14px;align-items:flex-start}
+.ghost-wrap svg{flex:none;width:52px;height:auto}
+
+footer{padding-block:28px 40px;border-top:1px solid var(--line);color:var(--fg-3);font-size:13px}
+footer .wrap{display:flex;flex-direction:column;gap:8px}
+footer a{color:var(--fg-2)}
+
+@media (max-width:720px){
+  .nav nav{margin-left:0;width:100%}
+  .hero{padding-block:26px 18px}
+  section.band{padding-block:30px 36px}
+  .moon{top:16px}
+  .tl-wrap{padding-left:30px}
+  .ms::before{left:-30px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .moon{animation:glow 6s ease-in-out infinite alternate}
+  @keyframes glow{from{box-shadow:0 0 60px rgba(255,177,92,.45),0 0 140px rgba(255,122,26,.25)}to{box-shadow:0 0 80px rgba(255,177,92,.6),0 0 180px rgba(255,122,26,.35)}}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><i></i>IDRIS EVENT PLAYBOOK</a>
+    <nav>
+      <a href="#pickup">Pickup</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#optional">Optional</a>
+      <a href="#vara" class="vara-link">Day of the Vara</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Stanton system · Alpha 4.10.2 · briefing as of Oct 20, 2026</div>
+    <h1 style="margin-top:10px">Two events. One crew. <span>One Idris.</span></h1>
+    <p class="lede">The Idris runs the Defense track. Every contract is shared, so each completion pays every crew member in full. Read the deadline tiles, do the pickup steps, then follow the timeline mission by mission.</p>
+    <div class="clock">
+      <div class="tile warn">
+        <span class="eyebrow">RSI Discovery Month</span>
+        <b>Live · end date unconfirmed</b>
+        <small>Started Oct 9, 2026 with 4.10.2. Guides cite Oct 20 as the close. The official FAQ had no end date as of Oct 13. Treat it as closing any day.</small>
+      </div>
+      <div class="tile vara">
+        <span class="eyebrow">Day of the Vara 2956</span>
+        <b id="vara-status">Starts Wed, Oct 21</b>
+        <small>Holiday is Oct 27. Last year's event ran to Nov 3, so expect roughly two weeks. 2956 end date not announced.</small>
+      </div>
+      <div class="tile ok">
+        <span class="eyebrow">Twitch Drops · zero effort</span>
+        <b>Oct 14 to Oct 27</b>
+        <small>Watch 4 total hours of any Drops-enabled Star Citizen stream for the Phoenix Insignia Display. Leave one running while we fly.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PICKUP ================= -->
+<section class="band" id="pickup" style="padding-bottom:10px">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Part 1 · RSI Discovery Month · the Idris plan</span>
+      <h2>Where the contracts come from</h2>
+      <p>All event contracts live in the mobiGlas Contract Manager anywhere in Stanton. You never fly to a contract giver. The Defense ones are posted by Foxwell Enforcement and the mission marker drops somewhere in Stanton when you accept, so we stack a few in one region before the Idris moves.</p>
+    </div>
+    <ol class="steps">
+      <li><b>Open mobiGlas, Contracts.</b> Look for the <b>RSI Disc. Month</b> label (some builds show it as a filter, some as a tag on each listing).</li>
+      <li><b>Pick the right giver.</b> Defense space combat = <b>Foxwell Enforcement</b>. Delivery (Rental Offer, Relay Race) = <b>Roberts Space Industries</b>.</li>
+      <li><b>One pilot accepts, then hits Share.</b> Use whoever has the most Defense points, since Orange contracts only appear once <em>that</em> pilot has the required points.</li>
+      <li><b>Everyone else accepts the share</b> from Contracts before it completes. Not in the party, or not accepted, means no points for that run.</li>
+      <li><b>Check the marker before undocking.</b> If the mission spawned on the far side of Stanton, abandon and pull the next listing. Idris travel time is the only real cost.</li>
+    </ol>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card">
+        <h3><span class="pill teal">Rules</span> Why every run pays everyone</h3>
+        <ul>
+          <li><b>All Defense and Transport contracts share with no point split.</b> Only the aUEC divides.</li>
+          <li><b>Constellation Rental Offer does not share.</b> Each pilot accepts and finishes their own copy.</li>
+          <li><b>Points go to the career track and to Your Total at the same time.</b> One Orange run is 417 Defense and 417 Total.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="pill teal">Crew</span> Idris stations</h3>
+        <ul>
+          <li><b>Pilot</b> keeps the nose on the heavies and parks close to the ship we are defending.</li>
+          <li><b>2 to 4 turret gunners.</b> Call targets by type. Heavies first, the ship we defend may already be hurt on arrival.</li>
+          <li><b>1 to 2 fighter pilots</b> launch from the hangar for anything fast that slips the turrets.</li>
+          <li><b>1 engineer/medic.</b> Fires, power, and dragging people to the med beds. Dead crew respawn aboard, not at a station.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TIMELINE ================= -->
+<section class="band" id="timeline" style="padding-top:26px">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Mission timeline</h2>
+      <p>Points shown are per crew member. Bars show where each pilot should sit after that mission. Green ticks are tiers you have crossed. Defense bar runs to 10,000, Your Total to 30,000.</p>
+    </div>
+    <div class="tl-wrap" id="tl"></div>
+    <div class="math" style="margin-top:16px"><b>Session math:</b> missions 0 to 6 take roughly 2 hours including Idris travel and put everyone at Defense Tier 1. Each Orange run after that is 15 to 20 minutes. Tier 2 lands around mission 11, Tier 3 around 17, the P8-SC Echo SMG at mission 26. Your Total Tier 1 (4,500) falls at mission 11 and Tier 2 (9,900) at mission 24 without touching any other track.</div>
+
+    <div class="card" style="margin-top:22px">
+      <h3><span class="pill green">Tonight</span> Session checklist</h3>
+      <ul class="check" data-store="dm">
+        <li><input type="checkbox" id="dm1"><label for="dm1">Everyone: Constellation Rental Offer, solo, before anything else<small>250 Total points each. Starts your 5-day Centaurus + Skylark rental on completion.</small></label></li>
+        <li><input type="checkbox" id="dm2"><label for="dm2">Relay Race, shared<small>250 Total points each. No combat.</small></label></li>
+        <li><input type="checkbox" id="dm3"><label for="dm3">Yellow Support Ship + Yellow Patrol System, shared<small>146 + 250 Defense. Unlocks every Orange contract for whoever accepted.</small></label></li>
+        <li><input type="checkbox" id="dm4"><label for="dm4">Orange Ship Under Attack / Neutralize Threats loop<small>417 each per run. Stack by region before moving the Idris.</small></label></li>
+        <li><input type="checkbox" id="dm5"><label for="dm5">Someone leaves a Drops-enabled Twitch stream running<small>4 hours total by Oct 27 for the Phoenix Insignia Display.</small></label></li>
+      </ul>
+      <div class="check-actions"><button class="btn" type="button" data-reset="dm">Reset checklist</button><span class="note">Checkmarks save on this device only.</span></div>
+    </div>
+
+    <h3 style="font-size:18px;margin:26px 0 10px">What the tiers pay</h3>
+    <div class="tiers">
+      <div class="tier-card"><h4>Defense · our track</h4>
+        <dl><dt>2,000</dt><dd>Scorpius Echo paint, Sovereign IP-20 power plant</dd><dt>4,000</dt><dd>Meteor PHB and TSB flight blades</dd><dt>6,500</dt><dd>Sovereign IP-30 power plant</dd><dt>10,000</dt><dd>P8-SC "Echo" SMG</dd></dl></div>
+      <div class="tier-card"><h4>Your Total · fills itself</h4>
+        <dl><dt>4,500</dt><dd>IC-10 cooler, RS-10 radar, IP-10 power plant</dd><dt>9,900</dt><dd>Ursa Starwalker paint</dd><dt>24,000</dt><dd>Aurora Mk II Starwalker paint + flight blades</dd><dt>30,000</dt><dd>Helios IP-10/20/30 power plants, Constellation Mk IV Starwalker paint, 8 Connie Mk IV flight blades</dd></dl></div>
+      <div class="tier-card" style="opacity:.75"><h4 style="color:var(--fg-3)">Transport · optional lane</h4>
+        <dl><dt>2,000</dt><dd>Zeus Mk II Keelback paint, BriskAir IC-20 cooler</dd><dt>4,000</dt><dd>Zeus Mk II flight blades</dd><dt>6,500</dt><dd>BriskAir IC-30 cooler</dd><dt>10,000</dt><dd>MaxLift-II "Keelback" tractor beam</dd></dl></div>
+      <div class="tier-card" style="opacity:.75"><h4 style="color:var(--fg-3)">Collection · optional lane</h4>
+        <dl><dt>2,000</dt><dd>Salvation Glacier paint, Delphi RS-20 radar</dd><dt>4,000</dt><dd>Mantis flight blades</dd><dt>6,500</dt><dd>Delphi RS-30 radar</dd><dt>10,000</dt><dd>Cambio-II "Glacier" SRT</dd></dl></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OPTIONAL ================= -->
+<section class="band opt" id="optional" style="padding-top:10px">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Optional · only if someone wants to run it alongside</span>
+      <h2 style="font-size:22px">Side lanes</h2>
+      <p>Neither of these is needed for the Defense rewards. They only matter if we chase the 30,000 Your Total tier, which needs about 10k in each career. Anyone running one stays in the party and shares, so the Idris crew still collects the points.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="pill grey">Transport</span> Supply Haul loop</h3>
+        <ul>
+          <li>Needs a 320+ SCU hauler (Hull B, Railen, C2). Do <b>Courier Run (Exp. E)</b> once (417, shared) to unlock.</li>
+          <li>Loop <b>Important Supply Haul</b> (Covalex): 625 points each, 124,000 aUEC. Share every run.</li>
+          <li>Smaller hauler: <b>Ling Supply Delivery</b>, 417 each. Verify on the first run that distant party members get credit.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="pill grey">Collection</span> Only with a mining ship</h3>
+        <ul>
+          <li><b>Procure Refined Beryl</b> 669 each or <b>Refined Iron</b> 408 each, no split. Mine at Wala, refine, share.</li>
+          <li>Skip Quantainium and the UCM salvage contracts. They split the Total track, and UCM (L) is Reclaimer-only.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DAY OF THE VARA ================= -->
+<section class="band vara-band" id="vara">
+  <div class="bats" aria-hidden="true">
+    <svg style="left:6%;top:30px" viewBox="0 0 64 32"><path d="M32 14c-3-8-10-12-18-10 4 3 5 7 4 11-5-2-10-1-14 3 6 0 10 3 12 8 3-3 7-4 10-2l6 6 6-6c3-2 7-1 10 2 2-5 6-8 12-8-4-4-9-5-14-3-1-4 0-8 4-11-8-2-15 2-18 10z"/></svg>
+    <svg style="left:28%;top:90px;width:22px" viewBox="0 0 64 32"><path d="M32 14c-3-8-10-12-18-10 4 3 5 7 4 11-5-2-10-1-14 3 6 0 10 3 12 8 3-3 7-4 10-2l6 6 6-6c3-2 7-1 10 2 2-5 6-8 12-8-4-4-9-5-14-3-1-4 0-8 4-11-8-2-15 2-18 10z"/></svg>
+    <svg style="left:48%;top:50px;width:28px" viewBox="0 0 64 32"><path d="M32 14c-3-8-10-12-18-10 4 3 5 7 4 11-5-2-10-1-14 3 6 0 10 3 12 8 3-3 7-4 10-2l6 6 6-6c3-2 7-1 10 2 2-5 6-8 12-8-4-4-9-5-14-3-1-4 0-8 4-11-8-2-15 2-18 10z"/></svg>
+    <svg style="left:66%;top:150px;width:18px" viewBox="0 0 64 32"><path d="M32 14c-3-8-10-12-18-10 4 3 5 7 4 11-5-2-10-1-14 3 6 0 10 3 12 8 3-3 7-4 10-2l6 6 6-6c3-2 7-1 10 2 2-5 6-8 12-8-4-4-9-5-14-3-1-4 0-8 4-11-8-2-15 2-18 10z"/></svg>
+  </div>
+  <div class="moon" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="vara-head">
+      <span class="eyebrow">Part 2 · Halloween in the 'verse · starts Wed, Oct 21, 2026</span>
+      <h2>Day of the Vara 2956</h2>
+      <p>The UEE exploration vessel <em>Vara</em> vanished in 2557 while orbiting the second planet of the Hades system. Captain Tisiphone Heptane's last transmissions described ruined alien cities. Search and Rescue never found the ship. Terra first marked the day in 2593, and it became an official UEE holiday in 2595. Every October 27 the 'verse puts on a mask.</p>
+    </div>
+
+    <h3 style="font:600 13px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#9d8bb8;margin:30px 0 16px">How long it runs</h3>
+    <ul class="dates">
+      <li class="dt-card"><span class="eyebrow">Day 1</span><b>Wed, Oct 21</b><span>Event kicks off. Read the Spectrum announcement for this year's reward rules before anyone queues.</span></li>
+      <li class="dt-card"><span class="eyebrow">The holiday</span><b>Tue, Oct 27</b><span>Day of the Vara proper. Expect the subscriber skeleton flair and store paints to peak here.</span></li>
+      <li class="dt-card tbd"><span class="eyebrow">Expected close</span><b>About Nov 3</b><span>Unconfirmed. Last year's event ran until Nov 3, about two weeks. Plan for a 14-day window and check Spectrum for the real cutoff.</span></li>
+    </ul>
+
+    <div class="grid g2" style="margin-top:18px;margin-bottom:14px">
+      <div class="card">
+        <h3><span class="pill orange">Unknown</span> What 2956 has not announced</h3>
+        <ul>
+          <li>Reward list, how masks are earned, and the end date. Only the Oct 21 start is listed on the RSI Community Hub and the SC Public Advisory.</li>
+          <li>Rumored from a sneak peek: Halloween-themed armor. Treat as unconfirmed until the Spectrum post goes up.</li>
+        </ul>
+        <div class="callout">
+          <span class="eyebrow">First move Wednesday</span>
+          <span>One person reads the official "Day of the Vara 2956" Spectrum post and drops the reward rules in the squad chat. Then we commit to the right method below.</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="pill ghost">Precedent</span> How the last two years paid out</h3>
+        <ul>
+          <li><b>2955 (last year):</b> Arena Commander, FPS, <b>Kill Collector</b> mode. Survive the waves and finish top 3 in a match to claim one mask set. Three sets: Fieldsbury Dark Bear helmets in several colors, The Hill Horror, Snarling Vanduul. One set per win.</li>
+          <li><b>2955 contests:</b> pumpkin decorating for the Pumpkino Spectrum badge, and a horror short-story contest written from the Vara crew's point of view.</li>
+          <li><b>2955 paints:</b> Black Magic for Polaris, Guardian and Sabre. Purple Haze and Ghoulish Green returned.</li>
+          <li><b>2954 (two years ago):</b> masks dropped from loot boxes across Stanton. Collecting a set earned the Spooktacular Spectrum badge.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="ghost-wrap">
+          <svg viewBox="0 0 64 80" aria-hidden="true"><path fill="#f3ecff" d="M32 2C16 2 6 14 6 30v44l8-6 8 6 10-6 10 6 8-6 8 6V30C58 14 48 2 32 2z"/><circle cx="23" cy="30" r="4" fill="#160a26"/><circle cx="41" cy="30" r="4" fill="#160a26"/><ellipse cx="32" cy="44" rx="4" ry="6" fill="#160a26"/></svg>
+          <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+            <h3>Plan A · if it's Kill Collector again</h3>
+            <ol>
+              <li><b>Queue as a squad.</b> Arena Commander, FPS, Kill Collector. Party up so we land in the same lobby and can cover each other.</li>
+              <li><b>Play for top 3, not for kills.</b> Survival to the end is what paid last year. Hold a defensible corner, share medpens, rotate who pushes.</li>
+              <li><b>Claim one set per win</b>, then run it back. Three wins per person clears all three sets.</li>
+              <li><b>Rotate the Idris crew through it</b> between Orange contracts while the ship repositions.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Plan B · if it's loot boxes again</h3>
+        <ol>
+          <li><b>Loot every bunker and outpost box</b> we pass during ground contracts (Eliminate Known Outlaw, Clear Hostiles from Site).</li>
+          <li><b>Check boxes at every landing</b> while the Idris refuels or crew swaps.</li>
+          <li><b>Pool the masks.</b> Hand spares to whoever is short a set so everyone hits the badge.</li>
+        </ol>
+        <div class="math">Either way, <b>contests are optional</b>. Enter the pumpkin or story contest only if someone wants the Spectrum badge. They do not gate any in-game gear.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="pill orange">Wednesday</span> Vara checklist</h3>
+      <ul class="check" data-store="vara">
+        <li><input type="checkbox" id="v1"><label for="v1">Read the official Spectrum announcement and post the reward rules in squad chat<small>Confirms Kill Collector vs loot boxes, the mask sets, and the real end date.</small></label></li>
+        <li><input type="checkbox" id="v2"><label for="v2">Pick Plan A or Plan B<small>Kill Collector squad queue, or loot boxes folded into our runs.</small></label></li>
+        <li><input type="checkbox" id="v3"><label for="v3">Each pilot claims all mask or helmet sets before the close<small>Last year that meant three top-3 finishes. Budget time before the expected Nov 3 cutoff.</small></label></li>
+        <li><input type="checkbox" id="v4"><label for="v4">Grab the paints you want while the store has them<small>Black Magic, Purple Haze and Ghoulish Green rotated in last year.</small></label></li>
+        <li><input type="checkbox" id="v5"><label for="v5">Optional: pumpkin or horror-story contest for the Spectrum badge</label></li>
+      </ul>
+      <div class="check-actions"><button class="btn" type="button" data-reset="vara">Reset checklist</button><span class="note" style="color:#9d8bb8">Checkmarks save on this device only.</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Point values and tiers from the Star Citizen Wiki's RSI Discovery Month page and the 4.10.2 contract list. Party-sharing rules from community guides written for the live build. Vara precedent from the 2955 and 2954 Spectrum announcements. Verify point values in your mobiGlas before a long session, since balance passes can change them.</span>
+    <span>Sources: <a href="https://starcitizen.tools/RSI_Discovery_Month">RSI Discovery Month (wiki)</a> · <a href="https://expcarry.com/star-citizen-rsi-discovery-month">party rules</a> · <a href="https://robertsspaceindustries.com/community-hub/post/rsi-discovery-month-guide-fast-finish-contracts-neCc2GRpMhr1t">fast-finish contracts</a> · <a href="https://starcitizen.tools/Idris-P">Idris-P</a> · <a href="https://starcitizen.tools/Day_of_the_Vara">Day of the Vara (wiki)</a> · <a href="https://robertsspaceindustries.com/spectrum/community/SC/forum/1/thread/day-of-the-vara-2955">Vara 2955 announcement</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- Mission timeline, generated from data so the cumulative math is exact ---------- */
+  var DEF_TIERS=[2000,4000,6500,10000], TOT_TIERS=[4500,9900,24000,30000];
+  var DEF_NAMES={2000:'Defense Tier 1',4000:'Defense Tier 2',6500:'Defense Tier 3',10000:'Defense Tier 4'};
+  var TOT_NAMES={4500:'Total Tier 1',9900:'Total Tier 2',24000:'Total Tier 3',30000:'Total Tier 4'};
+  var REWARD={'Defense Tier 1':'Scorpius Echo paint + IP-20 power plant','Defense Tier 2':'Meteor flight blades','Defense Tier 3':'Sovereign IP-30 power plant','Defense Tier 4':'P8-SC Echo SMG','Total Tier 1':'IC-10 cooler, RS-10 radar, IP-10 power plant','Total Tier 2':'Ursa Starwalker paint','Total Tier 3':'Aurora Mk II Starwalker paint + blades','Total Tier 4':'Helios power plants, Connie Mk IV Starwalker paint + 8 blades'};
+
+  var M=[
+    {n:'0',cls:'',name:'Constellation Rental Offer',giver:'Roberts Space Industries · Delivery',def:0,tot:250,
+     where:'mobiGlas, Contracts, RSI Disc. Month label, Delivery section. <b>Not shareable.</b> Every pilot accepts their own copy and runs it before we board the Idris. Use a small ship or the Idris snub.',
+     how:'Straight delivery. Follow the markers. 31,000 aUEC. Completing it starts your <b>5-day Constellation Mk V Centaurus + Skylark rental</b>, so finish it when you have five days to fly it.',
+     time:'~15 min'},
+    {n:'0b',cls:'',name:'Relay Race',giver:'Roberts Space Industries · Delivery',def:0,tot:250,
+     where:'Same Delivery section. One pilot accepts and shares, everyone accepts the share.',
+     how:'No combat. 31,000 aUEC, repeatable if we ever want filler Total points.',time:'~15 min'},
+    {n:'1',cls:'',name:'Yellow Lvl. Support Ship',giver:'Foxwell Enforcement · Space Combat',def:146,tot:146,
+     where:'Contracts, RSI Disc. Month, Foxwell listing. Marker spawns in Stanton on accept. Share it.',
+     how:'A handful of hostiles around a friendly ship. About 5 minutes of shooting. 44,750 aUEC. This and the next one exist to unlock Orange.',time:'~15 min with travel'},
+    {n:'2',cls:'',name:'Yellow Lvl. Patrol System',giver:'Foxwell Enforcement · Space Combat',def:250,tot:250,
+     where:'Same Foxwell listing. Share it.',
+     how:'Fly the patrol points and clear what shows up. 58,750 aUEC. After this the accepting pilot has 396 Defense, which clears every Orange requirement (146 / 208 / 250 / 333).',time:'~15 min'},
+    {n:'3',cls:'orange',name:'Orange Lvl. RSI Ship Under Attack',giver:'Foxwell Enforcement · Space Combat',def:417,tot:417,
+     where:'Foxwell listing, visible only to pilots with 208+ Defense. The 396-point pilot accepts and shares. Pull 2 to 3 Orange contracts in the same region before the Idris jumps.',
+     how:'Several heavy fighters plus support attacking an RSI ship. It may already be damaged, so drop in hot and open fire immediately. 191,750 aUEC split across the crew.',time:'15 to 20 min'},
+    {n:'4',cls:'orange',name:'Orange Lvl. Neutralize Threats',giver:'Foxwell Enforcement · Space Combat',def:417,tot:417,
+     where:'Foxwell listing, needs 333+ Defense on the accepting pilot. Share.',
+     how:'Clear a hostile group. No ship to babysit, so the Idris can brawl freely. 179,500 aUEC.',time:'15 to 20 min'},
+    {n:'5',cls:'orange',name:'Orange Lvl. RSI Ship Under Attack',giver:'Foxwell Enforcement · Space Combat',def:417,tot:417,
+     where:'Rotate who accepts so the list stays full. Everyone past mission 2 qualifies.',how:'Same drill. Heavies first.',time:'15 to 20 min'},
+    {n:'6',cls:'orange',name:'Orange Lvl. Neutralize Threats',giver:'Foxwell Enforcement · Space Combat',def:417,tot:417,
+     where:'Share.',how:'This completion pushes everyone past 2,000 Defense.',time:'15 to 20 min'},
+    {n:'7–11',cls:'orange block',name:'Five more Orange runs',giver:'Foxwell Enforcement · alternate Ship Under Attack / Neutralize Threats',def:417*5,tot:417*5,count:5,
+     where:'Keep rotating the accepting pilot. Conduct Security Sweep (333) is filler if both 417s are on cooldown.',
+     how:'Session two, realistically. About 90 minutes of Orange runs.',time:'~1.5 hr'},
+    {n:'12–17',cls:'orange block',name:'Six more Orange runs',giver:'Foxwell Enforcement',def:417*6,tot:417*6,count:6,
+     where:'Same.',how:'Session three.',time:'~2 hr'},
+    {n:'18–26',cls:'orange block',name:'Nine more Orange runs',giver:'Foxwell Enforcement',def:417*9,tot:417*9,count:9,
+     where:'Same.',how:'Sessions four and five. The SMG lands on the last one.',time:'~3 hr'}
+  ];
+
+  function fmt(n){return n.toLocaleString('en-US')}
+  function bar(label,val,max,tiers,cls){
+    var pct=Math.min(100,val/max*100);
+    var ticks=tiers.map(function(t){var hit=val>=t;return '<span class="tick'+(hit?' hit':'')+'" style="left:'+(t/max*100)+'%"><span>'+(t>=1000?(t/1000).toString().replace(/\.0$/,'')+'k':t)+'</span></span>'}).join('');
+    return '<div class="bar '+cls+'"><span class="lbl">'+label+'</span><div class="track"><div class="fill" style="width:'+pct+'%"></div>'+ticks+'</div><span class="val">'+fmt(val)+' / '+fmt(max)+'</span></div>';
+  }
+  var cumD=0,cumT=0,html='';
+  M.forEach(function(m){
+    var beforeD=cumD,beforeT=cumT;
+    cumD+=m.def;cumT+=m.tot;
+    var crossed=[];
+    DEF_TIERS.forEach(function(t){if(beforeD<t&&cumD>=t)crossed.push(DEF_NAMES[t])});
+    TOT_TIERS.forEach(function(t){if(beforeT<t&&cumT>=t)crossed.push(TOT_NAMES[t])});
+    var cls='ms '+m.cls+(crossed.length?' tier':'');
+    var ptsLabel=m.def?('+'+fmt(m.def)+(m.count?' · '+m.count+' × 417':'')):('+'+fmt(m.tot)+' total');
+    html+='<article class="'+cls+'" data-n="'+m.n+'">'
+      +'<div class="ms-head"><div class="title"><h3>'+m.name+'</h3><span class="giver">'+m.giver+'<b> · '+m.time+'</b></span></div>'
+      +'<div class="pts"><b>'+ptsLabel+'</b><small>'+(m.def?'defense pts each':'total pts each')+'</small></div></div>'
+      +'<div class="ms-body"><div><span class="k">Where to get it</span>'+m.where+'</div><div><span class="k">What it is</span>'+m.how+'</div></div>'
+      +(crossed.length?'<div class="unlock">'+crossed.map(function(c){return '<span class="pill green">'+c+'</span><span>'+REWARD[c]+'</span>'}).join('<span style="opacity:.4">·</span>')+'</div>':'')
+      +'<div class="prog">'+bar('Defense',cumD,10000,DEF_TIERS,'')+bar('Your Total',cumT,30000,TOT_TIERS,'total')+'</div>'
+      +'</article>';
+  });
+  var tl=document.getElementById('tl'); if(tl) tl.innerHTML=html;
+
+  /* ---------- Vara status wording ---------- */
+  var now=new Date(), varaStart=new Date(2026,9,21), varaHoliday=new Date(2026,9,27), varaExpectedEnd=new Date(2026,10,3);
+  var d=Math.ceil((varaStart-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/86400000);
+  var el=document.getElementById('vara-status');
+  if(el){
+    if(d>1) el.textContent='Starts in '+d+' days · Wed, Oct 21';
+    else if(d===1) el.textContent='Starts tomorrow · Wed, Oct 21';
+    else if(now<=varaExpectedEnd) el.textContent=(now<varaHoliday?'Live now · holiday Oct 27':'Live now · expected close about Nov 3');
+    else el.textContent='Likely ended · check Spectrum';
+  }
+
+  /* ---------- Per-device checklists ---------- */
+  function key(s){return 'idris-playbook:'+s}
+  document.querySelectorAll('.check[data-store]').forEach(function(list){
+    var s=list.getAttribute('data-store'),saved={};
+    try{saved=JSON.parse(localStorage.getItem(key(s))||'{}')}catch(e){saved={}}
+    list.querySelectorAll('input[type=checkbox]').forEach(function(cb){
+      if(saved[cb.id])cb.checked=true;
+      cb.addEventListener('change',function(){saved[cb.id]=cb.checked;try{localStorage.setItem(key(s),JSON.stringify(saved))}catch(e){}});
+    });
+  });
+  document.querySelectorAll('[data-reset]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var s=btn.getAttribute('data-reset'),list=document.querySelector('.check[data-store="'+s+'"]');
+      if(list)list.querySelectorAll('input[type=checkbox]').forEach(function(cb){cb.checked=false});
+      try{localStorage.removeItem(key(s))}catch(e){}
+    });
+  });
+})();
+</script>
+</body>
+</html>
