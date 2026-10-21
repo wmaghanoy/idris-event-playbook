@@ -212,6 +212,26 @@ footer a{color:var(--fg-2)}
   .moon{animation:glow 6s ease-in-out infinite alternate}
   @keyframes glow{from{box-shadow:0 0 60px rgba(255,177,92,.45),0 0 140px rgba(255,122,26,.25)}to{box-shadow:0 0 80px rgba(255,177,92,.6),0 0 180px rgba(255,122,26,.35)}}
 }
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);margin-bottom:14px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl th{font:600 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3);background:var(--bg-2)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td{color:var(--fg-2);font-variant-numeric:tabular-nums}
+.tbl td b{color:var(--fg)}
+.tbl tr.hi td{background:rgba(90,209,138,.07)}
+.tbl tr.hi td:first-child{color:var(--green);font-weight:600}
+.tbl tr.dim td{opacity:.6}
+.tbl caption{caption-side:top;text-align:left;padding:12px 12px 6px;font:600 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
+.trk{display:flex;flex-direction:column;gap:12px}
+.trk-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.trk-row button{background:var(--bg-2);border:1px solid var(--line);color:var(--fg);border-radius:8px;width:44px;height:40px;font:700 18px var(--display);cursor:pointer}
+.trk-row button:hover{border-color:var(--teal)}
+.trk-row input{width:84px;height:40px;background:var(--bg-2);border:1px solid var(--line);color:var(--fg);border-radius:8px;text-align:center;font:600 18px var(--mono)}
+.trk-note{color:var(--fg-2);font-size:14px}
+.trk-note b{color:var(--fg)}
+.trk-note .due{color:var(--amber)}
+.trk-note .done{color:var(--green)}
 </style>
 </head>
 <body>
@@ -223,6 +243,7 @@ footer a{color:var(--fg-2)}
       <a href="#pickup">Pickup</a>
       <a href="#timeline">Timeline</a>
       <a href="#optional">Optional</a>
+      <a href="#pace">Pace</a>
       <a href="#vara" class="vara-link">Day of the Vara</a>
     </nav>
   </div>
@@ -230,14 +251,14 @@ footer a{color:var(--fg-2)}
 
 <section class="hero" id="top">
   <div class="wrap">
-    <div class="eyebrow">Stanton system · Alpha 4.10.2 · briefing as of Oct 20, 2026</div>
+    <div class="eyebrow">Stanton system · Alpha 4.10.2 · briefing as of Oct 21, 2026</div>
     <h1 style="margin-top:10px">Two events. One crew. <span>One Idris.</span></h1>
-    <p class="lede">The Idris runs the Defense track. Every contract is shared, so each completion pays every crew member in full. Read the deadline tiles, do the pickup steps, then follow the timeline mission by mission.</p>
+    <p class="lede">The Idris runs the Defense track on protect-ship contracts only: Defend Ship until it jumps out, and Ship Under Attack. Every contract is shared, so each completion pays every crew member in full. Read the deadline tiles, do the pickup steps, then follow the timeline mission by mission.</p>
     <div class="clock">
       <div class="tile warn">
         <span class="eyebrow">RSI Discovery Month</span>
-        <b>Live · end date unconfirmed</b>
-        <small>Started Oct 9, 2026 with 4.10.2. Guides cite Oct 20 as the close. The official FAQ had no end date as of Oct 13. Treat it as closing any day.</small>
+        <b>Live · no official end date</b>
+        <small>Started Oct 9, 2026 with 4.10.2. The official FAQ still lists no end date (checked Oct 21). Named a month, so plan on about Nov 9 and be finished by <b>Nov 2</b>. Day-by-day pace is in the Pace section.</small>
       </div>
       <div class="tile vara">
         <span class="eyebrow">Day of the Vara 2956</span>
@@ -305,8 +326,8 @@ footer a{color:var(--fg-2)}
       <ul class="check" data-store="dm">
         <li><input type="checkbox" id="dm1"><label for="dm1">Everyone: Constellation Rental Offer, solo, before anything else<small>250 Total points each. Starts your 5-day Centaurus + Skylark rental on completion.</small></label></li>
         <li><input type="checkbox" id="dm2"><label for="dm2">Relay Race, shared<small>250 Total points each. No combat.</small></label></li>
-        <li><input type="checkbox" id="dm3"><label for="dm3">Yellow Support Ship + Yellow Patrol System, shared<small>146 + 250 Defense. Unlocks every Orange contract for whoever accepted.</small></label></li>
-        <li><input type="checkbox" id="dm4"><label for="dm4">Orange Ship Under Attack / Neutralize Threats loop<small>417 each per run. Stack by region before moving the Idris.</small></label></li>
+        <li><input type="checkbox" id="dm3"><label for="dm3">Yellow Support Ship, then Orange Defend Ship, shared<small>146 + 208 Defense. Both are escort-until-it-jumps runs. 354 total unlocks Ship Under Attack for whoever accepted.</small></label></li>
+        <li><input type="checkbox" id="dm4"><label for="dm4">Orange RSI Ship Under Attack loop<small>417 each per run, protect-ship only. No Patrol, no Neutralize Threats. Stack by region before moving the Idris.</small></label></li>
         <li><input type="checkbox" id="dm5"><label for="dm5">Someone leaves a Drops-enabled Twitch stream running<small>4 hours total by Oct 27 for the Phoenix Insignia Display.</small></label></li>
       </ul>
       <div class="check-actions"><button class="btn" type="button" data-reset="dm">Reset checklist</button><span class="note">Checkmarks save on this device only.</span></div>
@@ -347,8 +368,103 @@ footer a{color:var(--fg-2)}
         <h3><span class="pill grey">Collection</span> Only with a mining ship</h3>
         <ul>
           <li><b>Procure Refined Beryl</b> 669 each or <b>Refined Iron</b> 408 each, no split. Mine at Wala, refine, share.</li>
-          <li>Skip Quantainium and the UCM salvage contracts. They split the Total track, and UCM (L) is Reclaimer-only.</li>
+          <li>Skip Quantainium, UCM (M) and UCM (L). They split the Total track and need a MOTH or Reclaimer.</li>
+          <li>Have a Vulture? <a href="#pace" style="color:var(--teal)">UCM Order (S)</a> is the fastest Collection contract in the event. Full plan in the Pace section.</li>
         </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PACE ================= -->
+<section class="band" id="pace" style="padding-top:10px">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Pace plan · finish one week before the estimated end</span>
+      <h2 style="font-size:22px">Salvage and Defense, by the day</h2>
+      <p>CIG has not published an end date. The event launched Oct 9 and is named a month, so plan on <b>Nov 9</b> and have both bars done by <b>Mon, Nov 2</b>. From Oct 21 that is 12 days, or 9 weekdays. Every contract below is an RSI Discovery Month event contract, tagged RSI Disc. Month in mobiGlas.</p>
+    </div>
+
+    <div class="clock" style="margin:0 0 20px">
+      <div class="tile warn"><span class="eyebrow">Target</span><b>Done by Mon, Nov 2</b><small>One week of margin ahead of the Nov 9 estimate. If CIG posts a real date, this page gets updated.</small></div>
+      <div class="tile ok"><span class="eyebrow">Salvage · Vulture, solo</span><b>5 UCM (S) a day</b><small>55 hand-ins total, 183 points each. Five Vulture fills of 12 boxes. 7 a day if weekdays only.</small></div>
+      <div class="tile"><span class="eyebrow">Defense · Idris crew</span><b>2 to 3 Ship Under Attack a day</b><small>24 runs at 417 each after a 2-contract unlock ladder, 26 contracts total. 3 a day if weekdays only.</small></div>
+    </div>
+
+    <h3 style="font-size:18px;margin:8px 0 10px">Salvage: Small vs Medium vs Large</h3>
+    <div class="tbl-wrap"><table class="tbl">
+      <caption>UCM orders · Collection track · 10,000 points to finish</caption>
+      <thead><tr><th>Order</th><th>Points</th><th>Material per order</th><th>Orders to finish</th><th>Per day (12 d)</th><th>Per weekday (9 d)</th><th>Total material</th><th>Ship</th></tr></thead>
+      <tbody>
+        <tr class="hi"><td>UCM Order (S)</td><td><b>183</b></td><td>1 SCU Construction Rubble</td><td><b>55</b></td><td><b>5</b></td><td><b>7</b></td><td>55 SCU</td><td>Vulture · Fortune · Salvation</td></tr>
+        <tr class="dim"><td>UCM Order (M)</td><td>255</td><td>39 SCU Construction Pieces</td><td>40</td><td>4</td><td>5</td><td>1,560 SCU</td><td>Argo MOTH only · splits points</td></tr>
+        <tr class="dim"><td>UCM Order (L)</td><td>486</td><td>250 SCU Construction Material</td><td>21</td><td>2</td><td>3</td><td>5,250 SCU</td><td>Reclaimer · splits points</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tbl-wrap"><table class="tbl">
+      <caption>Collection tier checkpoints · orders handed in</caption>
+      <thead><tr><th>Tier</th><th>Points</th><th>Small</th><th>Medium</th><th>Large</th><th>Reward</th></tr></thead>
+      <tbody>
+        <tr><td>20%</td><td>2,000</td><td><b>11</b></td><td>8</td><td>5</td><td>Salvation Glacier paint, Delphi RS-20 radar</td></tr>
+        <tr><td>40%</td><td>4,000</td><td><b>22</b></td><td>16</td><td>9</td><td>Mantis flight blades</td></tr>
+        <tr><td>65%</td><td>6,500</td><td><b>36</b></td><td>26</td><td>14</td><td>Delphi RS-30 radar</td></tr>
+        <tr><td>100%</td><td>10,000</td><td><b>55</b></td><td>40</td><td>21</td><td>Cambio-II Glacier SRT</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="grid g2" style="margin-bottom:28px">
+      <div class="card">
+        <h3><span class="pill teal">Loop</span> One Vulture fill = 12 orders</h3>
+        <ol>
+          <li>Take 2 or 3 normal Hull Scraping or Legal Salvage contracts near the Lagrange station your UCM (S) order delivers to.</li>
+          <li>Scrape the hull, then <b>fracture and disintegrate</b> it. The chunks become the 1 SCU Construction Material boxes the order calls Rubble. Fill all 12 slots.</li>
+          <li>Accept every <b>RSI Disc. Month: UCM Order (S)</b> the event board offers. Reopen Contracts after each batch. The board rotates every few minutes and offers more Collection the more you complete.</li>
+          <li>Land at the named Lagrange station and put <b>one box per contract</b> on the freight elevator. Excess is not refunded, so never hand in two.</li>
+          <li>Run it <b>solo</b>. M and L split points across the party and at least one guide says S does too.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3><span class="pill green">Tracker</span> UCM (S) handed in</h3>
+        <div class="trk" data-key="pb-salv" data-step="183" data-base="0" data-max="10000" data-goal="55" data-tiers="2000,4000,6500,10000"></div>
+      </div>
+    </div>
+
+    <h3 style="font-size:18px;margin:8px 0 10px">Defense: protect-ship contracts only</h3>
+    <div class="tbl-wrap"><table class="tbl">
+      <caption>Protect-ship ladder · Defense track · 10,000 points to finish</caption>
+      <thead><tr><th>Step</th><th>Contract</th><th>What it is</th><th>Points</th><th>Unlocks at</th><th>Runs</th><th>Cumulative</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Yellow Lvl. Support Ship</td><td>Defend ship until it jumps out</td><td>146</td><td>0 Defense</td><td>1</td><td>146</td></tr>
+        <tr><td>2</td><td>Orange Lvl. Defend Ship</td><td>Defend ship until it jumps out</td><td>208</td><td>146 Defense</td><td>1</td><td>354</td></tr>
+        <tr class="hi"><td>3</td><td>Orange Lvl. RSI Ship Under Attack</td><td>Protect distressed ship</td><td><b>417</b></td><td>208 Defense</td><td><b>24</b></td><td><b>10,362</b></td></tr>
+      </tbody>
+    </table></div>
+    <div class="tbl-wrap"><table class="tbl">
+      <caption>Defense tier checkpoints · after the 2-contract unlock ladder</caption>
+      <thead><tr><th>Tier</th><th>Points</th><th>Ship Under Attack runs</th><th>Total contracts</th><th>Per day (12 d)</th><th>Reward</th></tr></thead>
+      <tbody>
+        <tr><td>20%</td><td>2,000</td><td><b>4</b></td><td>6</td><td>day 1 to 2</td><td>Scorpius Echo paint, Sovereign IP-20 power plant</td></tr>
+        <tr><td>40%</td><td>4,000</td><td><b>9</b></td><td>11</td><td>day 4 to 5</td><td>Meteor flight blades</td></tr>
+        <tr><td>65%</td><td>6,500</td><td><b>15</b></td><td>17</td><td>day 7 to 8</td><td>Sovereign IP-30 power plant</td></tr>
+        <tr><td>100%</td><td>10,000</td><td><b>24</b></td><td>26</td><td>day 11 to 12</td><td>P8-SC Echo SMG</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="pill orange">Why these</span> Fastest points per minute</h3>
+        <ul>
+          <li><b>Ship Under Attack</b> is the highest-paying protect-ship contract at 417. The victim starts damaged, four hostiles attack it, sometimes a Hammerhead. Drop in hot, pull aggro onto the Idris, keep the victim alive until it jumps.</li>
+          <li><b>Defend Ship</b> (Yellow 146, Orange 208) ends the moment the escorted ship quantum jumps, usually under ten minutes. It is the unlock ladder and the filler when Ship Under Attack is on cooldown.</li>
+          <li>Nothing else. No Patrol, no Neutralize Threats, no Security Sweep, no bunkers. Patrol pays 417 at best and takes far longer.</li>
+          <li>Backup pace if Ship Under Attack keeps failing: Orange Defend Ship only is 48 runs at 208, about 4 a day to Nov 2.</li>
+          <li>Shared. Everyone who accepted the share before completion gets the full points. Contracts are regional, so if Foxwell is missing from the board, move the Idris toward microTech and reopen Contracts after the next rotation.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="pill green">Tracker</span> Ship Under Attack runs</h3>
+        <p style="color:var(--fg-2);font-size:14px;margin:-4px 0 0">Counts from 354 points, which assumes the two unlock contracts are done.</p>
+        <div class="trk" data-key="pb-def" data-step="417" data-base="354" data-max="10000" data-goal="24" data-tiers="2000,4000,6500,10000"></div>
       </div>
     </div>
   </div>
@@ -443,7 +559,7 @@ footer a{color:var(--fg-2)}
 <footer>
   <div class="wrap">
     <span>Point values and tiers from the Star Citizen Wiki's RSI Discovery Month page and the 4.10.2 contract list. Party-sharing rules from community guides written for the live build. Vara precedent from the 2955 and 2954 Spectrum announcements. Verify point values in your mobiGlas before a long session, since balance passes can change them.</span>
-    <span>Sources: <a href="https://starcitizen.tools/RSI_Discovery_Month">RSI Discovery Month (wiki)</a> · <a href="https://expcarry.com/star-citizen-rsi-discovery-month">party rules</a> · <a href="https://robertsspaceindustries.com/community-hub/post/rsi-discovery-month-guide-fast-finish-contracts-neCc2GRpMhr1t">fast-finish contracts</a> · <a href="https://starcitizen.tools/Idris-P">Idris-P</a> · <a href="https://starcitizen.tools/Day_of_the_Vara">Day of the Vara (wiki)</a> · <a href="https://robertsspaceindustries.com/spectrum/community/SC/forum/1/thread/day-of-the-vara-2955">Vara 2955 announcement</a></span>
+    <span>Sources: <a href="https://starcitizen.tools/RSI_Discovery_Month">RSI Discovery Month (wiki)</a> · <a href="https://expcarry.com/star-citizen-rsi-discovery-month">party rules</a> · <a href="https://robertsspaceindustries.com/community-hub/post/rsi-discovery-month-guide-fast-finish-contracts-neCc2GRpMhr1t">fast-finish contracts</a> · <a href="https://starcitizen.tools/Idris-P">Idris-P</a> · <a href="https://robertsspaceindustries.com/comm-link/transmission/21350-FAQ-RSI-Discovery-Month">official Discovery Month FAQ</a> · <a href="https://versefiles.com/m/iasi_salvage_resourcegathering_s">UCM Order (S)</a> · <a href="https://www.youtube.com/watch?v=mq9iIGPy7bM">Alpine Rum event guide</a> · <a href="https://starcitizen.tools/Day_of_the_Vara">Day of the Vara (wiki)</a> · <a href="https://robertsspaceindustries.com/spectrum/community/SC/forum/1/thread/day-of-the-vara-2955">Vara 2955 announcement</a></span>
   </div>
 </footer>
 
@@ -466,25 +582,25 @@ footer a{color:var(--fg-2)}
     {n:'1',cls:'',name:'Yellow Lvl. Support Ship',giver:'Foxwell Enforcement · Space Combat',def:146,tot:146,
      where:'Contracts, RSI Disc. Month, Foxwell listing. Marker spawns in Stanton on accept. Share it.',
      how:'A handful of hostiles around a friendly ship. About 5 minutes of shooting. 44,750 aUEC. This and the next one exist to unlock Orange.',time:'~15 min with travel'},
-    {n:'2',cls:'',name:'Yellow Lvl. Patrol System',giver:'Foxwell Enforcement · Space Combat',def:250,tot:250,
-     where:'Same Foxwell listing. Share it.',
-     how:'Fly the patrol points and clear what shows up. 58,750 aUEC. After this the accepting pilot has 396 Defense, which clears every Orange requirement (146 / 208 / 250 / 333).',time:'~15 min'},
+    {n:'2',cls:'orange',name:'Orange Lvl. Defend Ship',giver:'Foxwell Enforcement · Space Combat',def:208,tot:208,
+     where:'Same Foxwell listing, appears once the accepting pilot has 146 Defense. Share it.',
+     how:'Escort the friendly ship and keep hostiles off it until it quantum jumps out. Four small fighters, Avengers and Hornets. Fast. After this the accepting pilot has 354 Defense, which unlocks Ship Under Attack (208).',time:'~10 min'},
     {n:'3',cls:'orange',name:'Orange Lvl. RSI Ship Under Attack',giver:'Foxwell Enforcement · Space Combat',def:417,tot:417,
-     where:'Foxwell listing, visible only to pilots with 208+ Defense. The 396-point pilot accepts and shares. Pull 2 to 3 Orange contracts in the same region before the Idris jumps.',
-     how:'Several heavy fighters plus support attacking an RSI ship. It may already be damaged, so drop in hot and open fire immediately. 191,750 aUEC split across the crew.',time:'15 to 20 min'},
-    {n:'4',cls:'orange',name:'Orange Lvl. Neutralize Threats',giver:'Foxwell Enforcement · Space Combat',def:417,tot:417,
-     where:'Foxwell listing, needs 333+ Defense on the accepting pilot. Share.',
-     how:'Clear a hostile group. No ship to babysit, so the Idris can brawl freely. 179,500 aUEC.',time:'15 to 20 min'},
+     where:'Foxwell listing, visible only to pilots with 208+ Defense. The 354-point pilot accepts and shares. Pull 2 to 3 copies in the same region before the Idris jumps.',
+     how:'The distressed RSI ship is already damaged and four hostiles attack it, sometimes a Hammerhead. Drop in hot, open fire immediately, pull aggro onto the Idris. 191,750 aUEC split across the crew. Highest-paying protect-ship contract in the event.',time:'15 to 20 min'},
+    {n:'4',cls:'orange',name:'Orange Lvl. RSI Ship Under Attack',giver:'Foxwell Enforcement · Space Combat',def:417,tot:417,
+     where:'Second copy from the same region. Share.',
+     how:'Same drill. Heavies first, keep the victim alive until it jumps.',time:'15 to 20 min'},
     {n:'5',cls:'orange',name:'Orange Lvl. RSI Ship Under Attack',giver:'Foxwell Enforcement · Space Combat',def:417,tot:417,
      where:'Rotate who accepts so the list stays full. Everyone past mission 2 qualifies.',how:'Same drill. Heavies first.',time:'15 to 20 min'},
-    {n:'6',cls:'orange',name:'Orange Lvl. Neutralize Threats',giver:'Foxwell Enforcement · Space Combat',def:417,tot:417,
+    {n:'6',cls:'orange',name:'Orange Lvl. RSI Ship Under Attack',giver:'Foxwell Enforcement · Space Combat',def:417,tot:417,
      where:'Share.',how:'This completion pushes everyone past 2,000 Defense.',time:'15 to 20 min'},
-    {n:'7–11',cls:'orange block',name:'Five more Orange runs',giver:'Foxwell Enforcement · alternate Ship Under Attack / Neutralize Threats',def:417*5,tot:417*5,count:5,
-     where:'Keep rotating the accepting pilot. Conduct Security Sweep (333) is filler if both 417s are on cooldown.',
-     how:'Session two, realistically. About 90 minutes of Orange runs.',time:'~1.5 hr'},
-    {n:'12–17',cls:'orange block',name:'Six more Orange runs',giver:'Foxwell Enforcement',def:417*6,tot:417*6,count:6,
-     where:'Same.',how:'Session three.',time:'~2 hr'},
-    {n:'18–26',cls:'orange block',name:'Nine more Orange runs',giver:'Foxwell Enforcement',def:417*9,tot:417*9,count:9,
+    {n:'7–11',cls:'orange block',name:'Five more Ship Under Attack runs',giver:'Foxwell Enforcement · protect-ship only',def:417*5,tot:417*5,count:5,
+     where:'Keep rotating the accepting pilot. If Ship Under Attack is on cooldown, Orange Defend Ship (208) is the filler. Nothing else.',
+     how:'Session two, realistically. About 90 minutes of Orange runs. Crosses 4,000 Defense.',time:'~1.5 hr'},
+    {n:'12–17',cls:'orange block',name:'Six more Ship Under Attack runs',giver:'Foxwell Enforcement',def:417*6,tot:417*6,count:6,
+     where:'Same.',how:'Session three. Crosses 6,500 Defense.',time:'~2 hr'},
+    {n:'18–26',cls:'orange block',name:'Nine more Ship Under Attack runs',giver:'Foxwell Enforcement',def:417*9,tot:417*9,count:9,
      where:'Same.',how:'Sessions four and five. The SMG lands on the last one.',time:'~3 hr'}
   ];
 
@@ -540,6 +656,29 @@ footer a{color:var(--fg-2)}
       if(list)list.querySelectorAll('input[type=checkbox]').forEach(function(cb){cb.checked=false});
       try{localStorage.removeItem(key(s))}catch(e){}
     });
+  });
+  /* ---------- Pace trackers (count saved on this device) ---------- */
+  var DUE=new Date(2026,10,2,23,59,59);
+  function daysLeft(){var ms=DUE-new Date();return Math.max(0,Math.ceil(ms/86400000));}
+  document.querySelectorAll('.trk').forEach(function(box){
+    var key=box.getAttribute('data-key'),step=+box.getAttribute('data-step'),base=+box.getAttribute('data-base'),
+        max=+box.getAttribute('data-max'),goal=+box.getAttribute('data-goal'),tiers=box.getAttribute('data-tiers').split(',').map(Number);
+    var n=0;try{n=+(localStorage.getItem(key)||0)||0;}catch(e){}
+    function save(){try{localStorage.setItem(key,n);}catch(e){}}
+    function render(){
+      var pts=base+n*step,pct=Math.min(100,pts/max*100),left=Math.max(0,goal-n),d=daysLeft();
+      var ticks=tiers.map(function(t){return '<span class="tick'+(pts>=t?' hit':'')+'" style="left:'+(t/max*100)+'%"><span>'+(t/1000).toString().replace('.0','')+'k</span></span>'}).join('');
+      var note;
+      if(left===0) note='<span class="done">Track complete.</span> '+fmt(pts)+' points banked.';
+      else if(d===0) note='<span class="due">Nov 2 has passed.</span> '+left+' left to finish the bar.';
+      else note='<b>'+left+' left</b> · '+d+' day'+(d===1?'':'s')+' to Nov 2 · <span class="due">'+Math.ceil(left/d)+' a day</span> keeps you on pace.';
+      box.innerHTML='<div class="trk-row"><button type="button" data-d="-1" aria-label="minus one">&minus;</button><input type="number" min="0" max="99" value="'+n+'" aria-label="count"><button type="button" data-d="1" aria-label="plus one">+</button><span class="trk-note">'+n+' of '+goal+'</span></div>'
+        +'<div class="bar total"><span class="lbl">Points</span><div class="track"><div class="fill" style="width:'+pct+'%"></div>'+ticks+'</div><span class="val">'+fmt(pts)+' / '+fmt(max)+'</span></div>'
+        +'<div class="trk-note">'+note+'</div>';
+    }
+    box.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;n=Math.max(0,Math.min(99,n+ +b.getAttribute('data-d')));save();render();});
+    box.addEventListener('change',function(e){if(e.target.tagName==='INPUT'){n=Math.max(0,Math.min(99,+e.target.value||0));save();render();}});
+    render();
   });
 })();
 </script>
